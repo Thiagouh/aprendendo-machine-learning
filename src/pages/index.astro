@@ -3,6 +3,7 @@ import BaseHead from "../components/BaseHead.astro";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
+import '../styles/home-roadmap.css'
 ---
 
 <!doctype html>
@@ -27,32 +28,39 @@ import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
         > com adições de conteúdos a minha preferência, na qual eu achar relevante.
       </p>
       <p>Aqui estão os meus registros de estudos divididos em tópicos:</p>
-      <ul>
-        <li>
-          <strong>Machine Learning Teórico:</strong>
-          <li>
-            <a href="/blog/01-intro-machine-learning"
-              >Introdução ao Machine Learning</a>
-          </li>
-          <li>
-            <a href="/blog/02-regressao-linear-funcao-custo"
-              >Regressão Linear e Função de Custo</a>
-          </li>
+      <ul class="roadmap-list">
+        <li class="category-item">
+          <span class="category-title">🤖 Machine Learning Teórico</span>
+          <ul class="sub-list">
+            <li>
+              <a href="/blog/01-intro-machine-learning"
+                >Introdução ao Machine Learning</a
+              >
+            </li>
+            <li>
+              <a href="/blog/02-regressao-linear-funcao-custo"
+                >Regressão Linear e Função de Custo</a
+              >
+            </li>
+          </ul>
         </li>
-        <li>
-          <strong>Python e Ferramentas:</strong>
-          <a href="/blog/configurando-ambiente">Jupyter, NumPy E Pandas</a>
+
+        <li class="category-item">
+          <span class="category-title">🐍 Python e Ferramentas</span>
+          <ul class="sub-list">
+            <li>
+              <a href="/blog/configurando-ambiente">Jupyter, NumPy e Pandas</a>
+            </li>
+          </ul>
         </li>
-        <li>
-          <strong>Projetos Práticos:</strong>
-          <a href="/blog/meu-primeiro-modelo">Prevendo preços de casas</a>
-        </li>
-        <li>
-          Check out the included blog posts in <code>src/content/blog/</code>
-        </li>
-        <li>
-          Customize the blog post page layout in <code
-            >src/layouts/BlogPost.astro</code>
+
+        <li class="category-item">
+          <span class="category-title">🚀 Projetos Práticos</span>
+          <ul class="sub-list">
+            <li>
+              <a href="/blog/meu-primeiro-modelo">Prevendo preços de casas</a>
+            </li>
+          </ul>
         </li>
       </ul>
       <p>
