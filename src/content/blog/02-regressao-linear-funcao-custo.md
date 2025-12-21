@@ -4,6 +4,15 @@ pubDate: 2025-12-20
 description: 'Minhas anotações sobre Regressão'
 ---
 
-Este é o meu primeiro post sobre a teoria.
+Regressão Linear, como pudemos ver na explicação teórica (caso não tenha visto, [acesse aqui](/blog/01-intro-machine-learning)), é um modelo de Aprendizado Supervisionado. O objetivo dele é ajustar uma linha que melhor se encaixe nos dados. Ou seja, estamos falando dos dados graficamente agora e isso nos dá até uma melhor visualização mental da quantificação desses dados.
 
-Aqui vou explicar regressão linear e função de custo.
+## 1. O modelo
+
+A função matemática que faz a previsão é a equação de uma reta (por isso uma linha). A mesma do ensino médio, mas ajustada para o Aprendizado de Máquina.
+
+$$f_{w, b}(x) = wx + b$$
+
+* **$x$**: É o dado de entrada.
+* **$w$** (weight/peso): É quem determina a inclinação da reta.
+* **$b$** (bias/viés): Determina onde a reta cruza o eixo Y.
+* **$f_{w,b}(x)$**: É a previsão da máquina ($\hat{y}$).
