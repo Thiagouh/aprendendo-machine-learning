@@ -10,7 +10,10 @@ import rehypeKatex from 'rehype-katex';
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://example.com',
-	integrations: [mdx(), sitemap()],
+	integrations: [mdx({
+		remarkPlugins: [remarkMath],
+		rehypePlugins: [rehypeKatex],
+  }), sitemap()],
 
 	markdown: {
 		remarkPlugins: [remarkMath],

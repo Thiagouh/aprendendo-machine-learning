@@ -1,0 +1,45 @@
+---
+const { src, alt, caption, sourceUrl } = Astro.props;
+---
+
+<figure class="blog-figure">
+  <img src={src} alt={alt} />
+  <figcaption>
+    <strong>Figura:</strong> {caption}
+    {sourceUrl}
+  </figcaption>
+</figure>
+
+<style>
+  .blog-figure {
+    margin: 3rem 0;
+    text-align: center;
+  }
+
+  .blog-figure img {
+    max-width: 100%;
+    width: auto;
+    margin: 0 auto;
+    display: block;
+    border-radius: 8px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    border: 1px solid #eee;
+  }
+
+  .blog-figure figcaption {
+    margin-top: 1rem;
+    font-size: 0.95rem;
+    color: #444;
+    text-align: left;
+  }
+
+  .image-source {
+    font-size: 0.8rem;
+    color: #777;
+  }
+
+  .image-source a {
+    color: #555;
+    text-decoration: underline;
+  }
+</style>

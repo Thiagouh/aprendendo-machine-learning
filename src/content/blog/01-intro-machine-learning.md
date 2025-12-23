@@ -14,6 +14,7 @@ Quando falamos de Aprendizado de Máquina, se referimos a um modelo de inteligê
 > Damos a ele a pergunta (x) e a resposta (y). O objetivo do modelo é aprender a mapear um para o outro.
 
 **Exemplos**:
+
 * **Regressão**: Quando queremos prever um número. (Ex.: Preço de casas, Temperatura)
 * **Classificação**: Quando queremos prever uma categoria. (Ex.: "É um Cachorro ou um Gato?", "É um tumor ou não?")
 
@@ -22,4 +23,5 @@ Quando falamos de Aprendizado de Máquina, se referimos a um modelo de inteligê
 Diferente do anterior, aqui não entregamos o gabarito. Nesse caso, o modelo irá receber os dados puros e irá precisar agrupar os dados conforme a similaridade entre eles sem saber o significado originalmente.
 
 **Exemplo:**
+
 * 1. **Clusterização**: O modelo analisa muitos dados (tipo mil) e separa em grupos (três, por exemplo), onde cada grupo possui padrões distintos. Isso é muito útil!

@@ -3,6 +3,7 @@ title: 'Regressão Linear e Função de Custo'
 pubDate: 2025-12-20
 description: 'Minhas anotações sobre Regressão'
 ---
+import BlogImage from '../../components/BlogImage.astro';
 
 Regressão Linear, como pudemos ver na explicação teórica (caso não tenha visto, [acesse aqui](/blog/01-intro-machine-learning)), é um modelo de Aprendizado Supervisionado. O objetivo dele é ajustar uma linha que melhor se encaixe nos dados. Ou seja, estamos falando dos dados graficamente agora e isso nos dá até uma melhor visualização mental da quantificação desses dados.
 
@@ -10,9 +11,17 @@ Regressão Linear, como pudemos ver na explicação teórica (caso não tenha vi
 
 A função matemática que faz a previsão é a equação de uma reta (por isso uma linha). A mesma do ensino médio, mas ajustada para o Aprendizado de Máquina.
 
-$$f_{w, b}(x) = wx + b$$
+$f_{{w,b}}(x) = wx + b$
 
 * **$x$**: É o dado de entrada.
 * **$w$** (weight/peso): É quem determina a inclinação da reta.
 * **$b$** (bias/viés): Determina onde a reta cruza o eixo Y.
-* **$f_{w,b}(x)$**: É a previsão da máquina ($\hat{y}$).
+* **$f_{{ w , b }}(x)$**: É a previsão da máquina ($\hat{y}$).
+
+<BlogImage
+  src="/public/images/regressao-linear.png"
+  alt="Gráfico de dispersão com reta ajustada"
+  caption="Ajustando uma reta aos dados de treino. O objetivo é fazer a reta passar o mais perto possível de todos os pontos."
+/>
+
+## 2. A função de Custo
