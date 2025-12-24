@@ -2,6 +2,7 @@
 title: 'Introdução ao Machine Learning'
 description: 'Entendendo os fundamentos antes dos algoritmos'
 pubDate: 'Dec 20 2025'
+heroImage: '/images/intro_classificacao.png'
 tags: ['ml-basics', 'teoria']
 ---
 

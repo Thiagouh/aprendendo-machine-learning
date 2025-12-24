@@ -1,14 +1,14 @@
 ---
 title: 'Regressão Linear e Função de Custo'
 pubDate: 2025-12-20
-description: 'Minhas anotações sobre Regressão'
+description: 'O que é a Regressão Linear e a Função de Custo'
+heroImage: '/images/custo_3d_superficie.png'
 ---
 import BlogImage from '../../components/BlogImage.astro';
 
 Regressão Linear, como pudemos ver na explicação teórica (caso não tenha visto, [acesse aqui](/blog/01-intro-machine-learning)), é um modelo de Aprendizado Supervisionado. O objetivo dele é ajustar uma linha que melhor se encaixe nos dados. Ou seja, estamos falando dos dados graficamente agora e isso nos dá até uma melhor visualização mental da quantificação desses dados.
 
 ## 1. O modelo
-
 A função matemática que faz a previsão é a equação de uma reta (por isso uma linha). A mesma do ensino médio, mas ajustada para o Aprendizado de Máquina.
 
 $$f_{{w,b}}(x) = wx + b$$
@@ -36,3 +36,43 @@ onde:
 * **$\sum_{i=1}^{m}$**: É o somatório de todos os erros. Do primeiro (note que o $i$ é igual a 1, ou seja, o primeiro dado. Se você ainda não entendeu o que é $i$, talvez isso tenha clareado) ao último dado que o modelo recebe, representado por $m$.
 * **$$\frac{1}{2m}$$**: Perceba que estamos dividindo a estimativa de erro por $2m$. Isso permite que o erro seja estipulado pela média dos erros. Assim, não importa se foram muitos ou poucos dados utilizados, teremos uma estimativa justa. O 2 que acompanha $m$ é apenas para facilitar os cálculos para o computador quando envolver gradiente descendente.
 * **$$J{(w,b)}$$**: Assim como $f(x)$ está para a própria função, $J{(w,b)}$ está para a função de custo.
+
+## Talvez você tenha dificuldade de visualizar mentalmente...
+Não se preocupe, não é algo tão complexo. Lembre-se que a função de custo quantifica o quão ruim o nosso modelo está. E perceba que a função de custo é justamente uma função, então ela possui um gráfico. Vamos plotar dois gráficos para que você tenha uma noção melhor:
+
+### Visualizando o Custo (Caso simplificado: apenas $w$)
+Para entender a "cara" dessa função, vamos imaginar que a nossa função tem apenas o parâmetro $w$ (ou seja, com $b=0$).
+Se plotarmos um gráfico com o valor de $w$ no eixo horizontal e o Custo $J(w)$ no eixo vertical, teremos uma curva em formato de "U" (uma parábola).
+
+<BlogImage
+  src="/images/custo_2d_parabola.png"
+  alt="Gráfico 2D da função de custo mostrando uma parábola"
+  caption="A Função de Custo J(w) simplificada. Nosso objetivo é chegar no fundo desse 'vale', onde o custo é mínimo (marcado com o X vermelho)."
+/>
+
+
+### O caso real (3D: $w$ e $b$)
+O gráfico anterior foi simplificado para uma melhor compreensão inicial. Na vida real, iremos estar utilizando tanto o peso $w$ quanto o viés $b$. Quando consideramos esses dois valores, o gráfico se torna uma superfície tridimensional. O eixo $Z$ representa o Custo $J(w,b)$ e os eixos da base representam o peso $w$ e o viés $b$.
+Novamente, vamos querer procurar os valores de $w$ e $b$ que nos levam ao ponto mais baixo da superfície.
+
+<BlogImage
+  src="/images/custo_3d_superficie.png"
+  alt="Gráfico 3D da função de custo mostrando uma superfície em forma de tigela"
+  caption="Superfície de custo J(w,b). O fundo da 'tigela' representa os valores ideais dos parâmetros."
+/>
+
+Note que é meio difícil de dizer olhando a imagem acima quais seriam os valores de $w$ e $b$ que melhor minimizam o custo da função, mas ainda assim eles estão lá. Se rotacionarmos o gráfico, provavelmente veríamos melhor. Mas há uma maneira que irá facilitar muito essa visualização! Falarei dela agora.
+
+### As "Fatias": Gráfico de Contorno (Contour Plot)
+Como os gráficos 3D podem ser difíceis de interpretar, podemos utilizar Gráficos de Contorno (também chamados de Curvas de Nível).
+
+Imagine que você cortou uma tigela 3D em várias fatias horizontais, do topo até o fundo, e está olhando exatamente de cima pra baixo.
+* Cada corte horizontal (ou elipse/linha) feito na tigela, representa um valor de Custo $J$ constante.
+* Todos os pontos $w,b$ na mesma linha têm exatamente o mesmo valor de custo. Olhe para a linha mais ao centro possível e analise que ela representa por si só um custo constante e que existem valores para $w,b$ que se encaixam nesse custo constante.
+* O centro das elipses concêntricas é o Mínimo Global (o menor custo possível).
+
+<BlogImage
+  src="/images/custo_contorno.png"
+  alt="Gráfico de contorno mostrando elipses concêntricas"
+  caption="Gráfico de Contorno. O 'X' vermelho no centro indica o ponto de menor custo, onde queremos que nosso algoritmo chegue."
+/>
