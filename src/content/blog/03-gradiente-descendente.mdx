@@ -4,3 +4,80 @@ pubDate: 2025-12-20
 description: 'A Importância do Gradiente Descendente'
 heroImage: '/images/gradiente_descendente_multi_path.png'
 ---
+import BlogImage from '../../components/BlogImage.astro'
+
+Se você acabou de passar pelo Blog que fala sobre **Regressão Linear e Função de Custo**, você está no lugar certo! Se ainda não leu ou não sabe o que é, [acesse aqui](/blog/02-regressao-linear-funcao-custo/).
+
+Vimos com a Função de Custo o quão impreciso o nosso modelo pode ser. Mas... como podemos fazer com que ele melhore? ou seja, como podemos fazer com que a função de custo nos devolva o menor resultado possível ou até mesmo nulo? Para responder isso, utilizamos o Gradiente Descendente.
+
+O Gradiente Descendente, por definição, é um algoritmo de otimização que minimiza a função de custo de forma iterativa ajustando os parâmetros ($w$ e $b$) na direção da inclinação mais íngreme.
+
+## **Como funciona na prática?**
+
+Vamos utilizar a própria imagem no topo da página para exemplificar: 
+* com seu dedo, aponte para qualquer ponto aleatório do gráfico convexo que possua um custo alto e, em seguida, tente arrastar seu dedo até a estrela que representa o Mínimo Global (o menor custo possível).
+
+Parabéns! Com seu dedo, você simulou o trabalho de um gradiente descendente. Provavelmente não foi uma simulação perfeita, pois o gradiente descendente utiliza a lógica matemática para sempre atingir os pontos de maior inclinação, e intuição e visualização podem não fornecer a melhor precisão, mas você chegou no ponto em questão.
+
+## A Fórmula Matemática
+
+Entendido o objetivo do gradiente descendente e como ele se comporta, vamos entender como a matemática dá vida ao gradiente descendente.
+
+Como mencionado anteriormente, o Gradiente Descendente ajusta os parâmetros $w$ e $b$, então temos as fórmulas:
+
+$$
+w = w - \alpha \frac{\partial}{\partial w} J(w,b)
+$$
+
+$$
+b = b - \alpha \frac{\partial}{\partial b} J(w,b)
+$$
+
+* $=$ **(Atribuição)** : Aqui o sinal de igual é de **atribuição** e não de igualdade. Estamos atualizando o valor de $w$ e $b$ por novos valores de $w$ e $b$. Cuidado nesse detalhe!
+* $\alpha$ **(Taxa de Aprendizado)** : É um número pequeno (Ex.: 0.01) que define o tamanho do passo na hora da descida. Um número alto (Ex.: 1.0) pode levar a passos muito largos e isso pode levar à divergência, o que não é desejado.
+* $\frac{\partial}{\partial w}$ e $\frac{\partial}{\partial b}$ **(Derivada)** : É o gradiente. Em cálculo, a derivada dá a inclinação da reta tangente naquele ponto. É justamente ela quem diz se a reta está subindo ou descendo.
+* $-$ **(Sinal de Menos)** : O sinal de menos irá obrigar a derivada a sempre descer. Veja:
+  * Se a inclinação é positiva (subindo para a direita), queremos ir para a esquerda (diminuir o $w$, ou $b$). Subtrair um positivo diminui o $w$ (ou $b$).
+  * Se a inclinação é negativa (subindo para a esquerda), queremos ir para a direita (aumentar o $w$, ou $b$). Subtrair um negativo aumenta o $w$ (ou $b$).
+  * **Conclusão**: O sinal de menos nos obriga a sempre trabalhar para o lado contrário à subida.
+
+## Detalhes importantes
+---
+Até aqui pudemos compreender bem o que é o gradiente descendente e o que ele faz. Porém, há alguns detalhes comentados anteriormente que vale a pena explicar melhor.
+
+### Convergência e Divergência: O perigo do Alpha
+Quando eu estava explicando o significado da Taxa de Aprendizado ($\alpha$), mencionei que o tamanho do passo é importante. A escolha desse número define se o nosso modelo vai conseguir aprender (Convergência) ou se vai se perder completamente (Divergência).
+
+Temos dois cenários principais de erro na escolha do $\alpha$:
+
+* **Se $\alpha$ for muito pequeno:**
+  O algoritmo irá dar passos minúsculos. Ele vai conseguir descer a montanha (nosso gráfico de custo) e chegar no fundo (**Convergência**), porém, vai precisar de milhões de passos para isso. O modelo funciona, mas é **extremamente lento e ineficiente**.
+
+* **Se $\alpha$ for muito grande:**
+  O algoritmo tenta dar um passo tão largo que ultrapassa o fundo do vale e cai do outro lado, num ponto mais alto do que começou (o erro aumenta). Na próxima iteração, ele tenta corrigir e salta ainda mais longe para o outro lado. O algoritmo nunca chega ao fundo e o erro tende a ir para o infinito. Isso se chama **Divergência**.
+
+<BlogImage
+  src="/images/comparacao_taxa_aprendizado.png"
+  alt="Comparação entre três taxas de aprendizado: pequena, ideal e grande"
+  caption="O impacto da Taxa de Aprendizado. À esquerda, passos muito curtos. No centro, passos ideais. À direita, o passo é tão grande que o algoritmo se afasta do objetivo (Divergência)."
+/>
+
+### Implementação: O erro de "Atualização Simultânea"
+
+Agora, um aviso importante para quando você for implementar essas fórmulas matemáticas em código (seja em Python ou outra linguagem).
+
+Olhando as equações, poderíamos achar que podemos simplesmente atualizar $w$ e depois atualizar $b$. Mas **cuidado**. A definição do gradiente descendente exige que ambos sejam atualizados com base nos valores da iteração atual.
+
+Se você atualizar o $w$ primeiro, e usar esse **novo $w$** para calcular o erro na fórmula no $b$, você quebrou a matemática do algoritmo. Você não está mais descendo a montanha corretamente, pois a derivada do $b$ estará "contaminada" pelo passo já dado em $w$.
+
+### Forma correta (Variáveis Temporárias)
+
+Para ficar mais completo o aviso, segue a implementação correta:
+
+Você deve calcular os novos valores em variáveis temporárias (ex.: 'tmp_w', 'tmp_b') e só depois salvar nas variáveis reais.
+
+1. Calcule o novo valor de $w$ e salve em 'tmp_w'.
+2. Calcule o novo valor de $b$ e salve em 'tmp_b' (usando os valores de $w$ e $b$ originais).
+3. Atualize: $w = tmp\_w$ e $b = tmp\_b$.
+
+Assim você garante que o passo dado em direção ao vale considere a geometria exata do ponto onde você estava no início da iteração.
