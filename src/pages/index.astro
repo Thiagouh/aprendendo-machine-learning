@@ -3,7 +3,6 @@ import BaseHead from "../components/BaseHead.astro";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
-import '../styles/home-roadmap.css'
 ---
 
 <!doctype html>
@@ -52,7 +51,10 @@ import '../styles/home-roadmap.css'
           <span class="category-title">🐍 Python e Ferramentas</span>
           <ul class="sub-list">
             <li>
-              <a href="/blog/configurando-ambiente">Jupyter, NumPy e Pandas</a>
+              <a href="/blog/python-ferramentas/configurando-ambiente">Jupyter, NumPy e Pandas</a> (ainda em construção)
+            </li>
+            <li>
+              <a href="/blog/python-ferramentas/vetorizacao-numpy">Vetorização no NumPy</a> (ainda em construção)
             </li>
           </ul>
         </li>
@@ -61,24 +63,55 @@ import '../styles/home-roadmap.css'
           <span class="category-title">🚀 Projetos Práticos</span>
           <ul class="sub-list">
             <li>
-              <a href="/blog/meu-primeiro-modelo">Prevendo preços de casas</a>
+              <a href="/blog/projetos-praticos/meu-primeiro-modelo">Prevendo preços de casas</a> (ainda em construção)
             </li>
           </ul>
         </li>
       </ul>
-      <p>
-        Have fun! If you get stuck, remember to
-        <a href="https://docs.astro.build/">read the docs</a>
-        or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-      </p>
-      <p>
-        Looking for a blog template with a bit more personality? Check out
-        <a href="https://github.com/Charca/astro-blog-template"
-          >astro-blog-template</a
-        >
-        by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-      </p>
     </main>
     <Footer />
   </body>
 </html>
+
+<style>
+  .roadmap-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 2rem;
+  }
+
+  .category-item {
+    margin-bottom: 2rem;
+    border-left: 4px solid var(--accent);
+    padding-left: 1rem;
+  }
+
+  .category-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: rgb(var(--black));
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .sub-list {
+    list-style: disc;
+    margin-left: 1.5rem;
+    color: rgb(var(--gray-dark));
+  }
+
+  .sub-list li {
+    margin-bottom: 0.5rem;
+  }
+
+  .badge-new {
+    background-color: #d1fae5;
+    color: #065f46;
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+</style>
