@@ -1,0 +1,92 @@
+---
+title: 'Vetorização'
+pubDate: 2025-12-20
+description: 'Aqui veremos a fundo a importância da vetorização'
+heroImage: '/images/vetorizacao_numpy.png'
+---
+import Callout from '../../../components/Callout.astro'
+
+<Callout type="info" title="Antes de Começar: Python Básico">
+É importante salientar inicialmente que será necessário alguns conhecimentos básicos sobre Python para entender o Blog sem boiar muito. Então se você nunca viu nada de Python, eu recomendo os seguintes conteúdos para estudo (ou apenas se quiser ver o que foi utilizado no blog):
+
+* **[Python para Estatísticos](https://tmfilho.github.io/pyestbook/intro.html):** Este livro, do professor Telmo de Menezes e Silva Filho, do Departamento de Estatística da UFPB é um ótimo guia para quem quer aprender Python. Foi essencial para o meu processo seletivo da TAIL e vai direto ao ponto no que tange a programação voltada para dados.
+* **[Curso de Python - Kaggle](https://www.kaggle.com/learn/python):** O Kaggle é a maior comunidade de Data Science do mundo. A seção de cursos deles é perfeita se você quer praticidade: são minicursos gratuitos que rodam direto no navegador e focam exclusivamente nas ferramentas que iremos usar em Machine Learning, ignorando o que não é essencial agora.
+ </Callout>
+
+Nos posts anteriores, vimos a seguinte fórmula da Regressão Linear Múltipla:
+
+$$
+f_{w,b}(x) = \vec{w} \cdot \vec{x} + b
+$$
+
+Matematicamente isso é perfeito. Mas, computacionalmente, isso pode ser um pesadelo se tivermos que resolver termo a termo milhões de dados (tipo quando $n = 5.000.000$).
+
+Se você já programou em alguma linguagem de programação, sua intuição mandaria utilizar um loop 'for' para percorrer todos os dados e somá-los. Porém, em Python, para Machine Learning, evitamos utilizá-lo.
+
+### Porque evitar loops em Python?
+Python é uma linguagem interpretada e dinâmica. Ou seja, a cada vez que o loop roda, o programa irá verificar o tipo da variável, alocar memória e executar a soma. Isso acaba gerando uma **sobrecarga** enorme principalmente se houver uma enorme quantidade de dados a serem processados pelo loop.
+
+## Introdução a Vetorização (NumPy)
+Então se utilizar loops não é a melhor abordagem para esse caso, temos uma alternativa perfeita para essa situação que é justamente a **Vetorização**. A vetorização permite que o nosso computador execute operações em conjuntos de dados inteiros de uma só vez. Isso acontece por meio de instruções de baixo nível na CPU chamadas **SIMD (Single Instruction, Multiple Data)**.
+
+Para usar isso em Python, utilizamos a biblioteca **NumPy**.
+
+### A comparação: Loop vs Vetorização
+Vamos simular o cálculo do modelo $\mathbf{w} \cdot \mathbf{x}$ (Produto Escalar).
+
+#### A implementação com loop (lenta)
+Começaremos com a implementação de má-qualidade (pelo menos para o nosso objetivo atual). Vamos percorrer cada elemento dos vetores 'w' e 'x' multiplicando-os e somar tudo.
+
+```python
+import time
+
+# dados simulados (1 milhão de features)
+w = [i * 0.0001 for i in range(1000000)]
+x = [i * 0.0001 for i in range(1000000)]
+
+def produto_escalar_loop(w, x):
+  resultado = 0
+  for i in range(len(w)):
+    resultado += x[i] * w[i]
+  return resultado
+
+start = time.time()
+resultado_final = produto_escalar_loop(w, x)
+end = time.time()
+
+print(f"Tempo com loop: {end - start:.5f} segundos.")
+```
+
+#### A implementação vetorizada (rápida)
+Aqui temos a nossa implementação visada em performance. Veja que o código também fica menor e mais limpando utilizando o método de vetorização. 
+
+```python
+import numpy as np
+import time
+
+w_np = np.array(w)
+x_np = np.array(x)
+
+start = time.time()
+resultado = np.dot(w_np, x_np)
+end = time.time()
+
+print(f"Tempo com vetorização: {end - start:.5f} segundos.")
+```
+
+##### **Saída do Terminal**
+```text
+Tempo com loop: 0.05918 segundos.
+Tempo com vetorização: 0.00186 segundos.
+```
+
+Note que a implementação vetorizada é muito mais rápida (sim, por millisegundos. Mas ainda é ~32x mais rápido a vetorização em relação com o loop).
+
+## Conexão com a Matemática 
+Lembra da fórmula matemática que vimos no Blog passado que envolvia o Produto Escalar ($f_{\mathbf{w},b}(\mathbf{x}) = \mathbf{w} \cdot \mathbf{x} + b $)? A vetorização permite traduzir essa matemática diretamente para o código. Invés de escrevermos 10 linhas de loop, podemos simplesmente escrever:
+
+```python
+f = np.dot(w, x) + b
+```
+
+Dessa forma o código ficará muito mais limpo, organizado e rápido.

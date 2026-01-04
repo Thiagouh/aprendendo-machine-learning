@@ -1,0 +1,54 @@
+---
+interface Props {
+  icon?: string;
+  type?: 'info' | 'warning' | 'danger';
+  title?: string;
+}
+
+const { icon = "🐍", type = 'info', title = "Pré-requisitos" } = Astro.props;
+
+const colors = {
+    info: { bg: '#eef9fd', border: '#2cb1bc', text: '#222' },
+    warning: { bg: '#fffbe6', border: '#ffe58f', text: '#222' },
+    danger: { bg: '#fff1f0', border: '#ffccc7', text: '#222' }
+};
+
+const theme = colors[type];
+---
+
+<div class="callout-container">
+    <div class="callout-header">
+        <span class="icon">{icon}</span>
+        <strong class="title">{title}</strong>
+    </div>
+    <div class="callout-content">
+        <slot /> </div>
+</div>
+
+<style define:vars={{ bg: theme.bg, border: theme.border, text: theme.text }}>
+    .callout-container {
+        background-color: var(--bg);
+        border-left: 4px solid var(--border);
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 1.5rem 0;
+        color: var(--text);
+    }
+
+    .callout-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+        font-size: 1.1rem;
+    }
+
+    .icon {
+        font-size: 1.25rem;
+    }
+
+    .callout-content :global(a) {
+        text-decoration: underline;
+        font-weight: bold;
+    }
+</style>
