@@ -27,27 +27,27 @@ Se você já programou em alguma linguagem de programação, sua intuição mand
 Python é uma linguagem interpretada e dinâmica. Ou seja, a cada vez que o loop roda, o programa irá verificar o tipo da variável, alocar memória e executar a soma. Isso acaba gerando uma **sobrecarga** enorme principalmente se houver uma enorme quantidade de dados a serem processados pelo loop.
 
 ## Introdução a Vetorização (NumPy)
-Então se utilizar loops não é a melhor abordagem para esse caso, temos uma alternativa perfeita para essa situação que é justamente a **Vetorização**. A vetorização permite que o nosso computador execute operações em conjuntos de dados inteiros de uma só vez. Isso acontece por meio de instruções de baixo nível na CPU chamadas **SIMD (Single Instruction, Multiple Data)**.
+Então se utilizar loops não é a melhor abordagem para esse caso, temos uma alternativa perfeita para essa situação que é justamente a **Vetorização**. A vetorização permite que o nosso computador execute operações em conjuntos de dados inteiros de uma só vez. Isso acontece por meio de instruções de baixo nível na CPU chamadas SIMD (Single Instruction, Multiple Data).
 
 Para usar isso em Python, utilizamos a biblioteca **NumPy**.
 
 ### A comparação: Loop vs Vetorização
-Vamos simular o cálculo do modelo $\mathbf{w} \cdot \mathbf{x}$ (Produto Escalar).
+Se você ainda não acredita em mim, te provarei agora que o loop 'for' é mais lento que a vetorização! (e também aprenderá como utilizar a vetorização). Vamos, portanto, simular o cálculo do modelo $\mathbf{w} \cdot \mathbf{x}$ (Produto Escalar).
 
 #### A implementação com loop (lenta)
-Começaremos com a implementação de má-qualidade (pelo menos para o nosso objetivo atual). Vamos percorrer cada elemento dos vetores 'w' e 'x' multiplicando-os e somar tudo.
+Começaremos com a implementação do loop 'for'. Vamos percorrer cada elemento dos vetores 'w' e 'x' multiplicando-os e somar tudo.
 
 ```python
 import time
 
-# dados simulados (1 milhão de features)
+# 1 milhão de features como dados simulados
 w = [i * 0.0001 for i in range(1000000)]
 x = [i * 0.0001 for i in range(1000000)]
 
 def produto_escalar_loop(w, x):
   resultado = 0
   for i in range(len(w)):
-    resultado += x[i] * w[i]
+    resultado += x[i] * w[i] # Produto Escalar
   return resultado
 
 start = time.time()
@@ -58,17 +58,22 @@ print(f"Tempo com loop: {end - start:.5f} segundos.")
 ```
 
 #### A implementação vetorizada (rápida)
-Aqui temos a nossa implementação visada em performance. Veja que o código também fica menor e mais limpando utilizando o método de vetorização. 
+Aqui temos a nossa implementação visada em performance. Veja que o código também fica menor e mais limpo utilizando o método de vetorização.
 
 ```python
 import numpy as np
 import time
 
+w = [i * 0.0001 for i in range(1000000)]
+x = [i * 0.0001 for i in range(1000000)]
+
+# A conversão para array é necessária para o NumPy 
+# trabalhar
 w_np = np.array(w)
 x_np = np.array(x)
 
 start = time.time()
-resultado = np.dot(w_np, x_np)
+resultado = np.dot(w_np, x_np) # Produto Escalar
 end = time.time()
 
 print(f"Tempo com vetorização: {end - start:.5f} segundos.")
@@ -80,7 +85,7 @@ Tempo com loop: 0.05918 segundos.
 Tempo com vetorização: 0.00186 segundos.
 ```
 
-Note que a implementação vetorizada é muito mais rápida (sim, por millisegundos. Mas ainda é ~32x mais rápido a vetorização em relação com o loop).
+Note que a implementação vetorizada é muito mais rápida (sim, por millisegundos. Mas ainda é ~32x mais rápido a vetorização em relação ao loop).
 
 ## Conexão com a Matemática 
 Lembra da fórmula matemática que vimos no Blog passado que envolvia o Produto Escalar ($f_{\mathbf{w},b}(\mathbf{x}) = \mathbf{w} \cdot \mathbf{x} + b $)? A vetorização permite traduzir essa matemática diretamente para o código. Invés de escrevermos 10 linhas de loop, podemos simplesmente escrever:
