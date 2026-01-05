@@ -7,11 +7,33 @@ heroImage: '/images/vetorizacao_numpy.png'
 import Callout from '../../../components/Callout.astro'
 
 <Callout type="info" title="Antes de Começar: Python Básico">
-É importante salientar inicialmente que será necessário alguns conhecimentos básicos sobre Python para entender o Blog sem boiar muito. Então se você nunca viu nada de Python, eu recomendo os seguintes conteúdos para estudo (ou apenas se quiser ver o que foi utilizado no blog):
+É importante salientar inicialmente que serão necessários alguns conhecimentos básicos sobre Python para entender o Blog sem boiar muito. Então se você nunca viu nada de Python, eu recomendo os seguintes conteúdos para estudo (ou apenas se quiser ver o que foi utilizado no blog):
 
 * **[Python para Estatísticos](https://tmfilho.github.io/pyestbook/intro.html):** Este livro, do professor Telmo de Menezes e Silva Filho, do Departamento de Estatística da UFPB é um ótimo guia para quem quer aprender Python. Foi essencial para o meu processo seletivo da TAIL e vai direto ao ponto no que tange a programação voltada para dados.
-* **[Curso de Python - Kaggle](https://www.kaggle.com/learn/python):** O Kaggle é a maior comunidade de Data Science do mundo. A seção de cursos deles é perfeita se você quer praticidade: são minicursos gratuitos que rodam direto no navegador e focam exclusivamente nas ferramentas que iremos usar em Machine Learning, ignorando o que não é essencial agora.
+* **[Kaggle](https://www.kaggle.com/learn):** O Kaggle é a maior comunidade de Data Science do mundo. A seção de cursos deles é perfeita se você quer praticidade: são minicursos gratuitos que rodam direto no navegador e focam exclusivamente nas ferramentas que iremos usar em Machine Learning, ignorando o que não é essencial agora. 
  </Callout>
+
+ <style>{`
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 0.95rem;
+  }
+  th {
+    background-color: #f4f4f4;
+    border-bottom: 2px solid #ddd;
+    text-align: left;
+    padding: 12px;
+  }
+  td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #eee;
+  }
+  tr:nth-child(even) {
+    background-color: #fafafa;
+  }
+`}</style>
 
 Nos posts anteriores, vimos a seguinte fórmula da Regressão Linear Múltipla:
 
@@ -21,21 +43,21 @@ $$
 
 Matematicamente isso é perfeito. Mas, computacionalmente, isso pode ser um pesadelo se tivermos que resolver termo a termo milhões de dados (tipo quando $n = 5.000.000$).
 
-Se você já programou em alguma linguagem de programação, sua intuição mandaria utilizar um loop 'for' para percorrer todos os dados e somá-los. Porém, em Python, para Machine Learning, evitamos utilizá-lo.
+Se você já programou em alguma linguagem de programação, sua intuição mandaria utilizar um loop ```for``` para percorrer todos os dados e somá-los. Porém, em Python, para Machine Learning, evitamos utilizá-lo.
 
-### Porque evitar loops em Python?
-Python é uma linguagem interpretada e dinâmica. Ou seja, a cada vez que o loop roda, o programa irá verificar o tipo da variável, alocar memória e executar a soma. Isso acaba gerando uma **sobrecarga** enorme principalmente se houver uma enorme quantidade de dados a serem processados pelo loop.
+### Por que evitar loops em Python?
+Python é uma linguagem interpretada e dinâmica. Ou seja, a cada vez que o loop roda, o programa irá verificar o tipo da variável, alocar memória e executar a soma. Isso acaba gerando uma sobrecarga enorme principalmente se houver uma enorme quantidade de dados a serem processados pelo loop.
 
 ## Introdução a Vetorização (NumPy)
-Então se utilizar loops não é a melhor abordagem para esse caso, temos uma alternativa perfeita para essa situação que é justamente a **Vetorização**. A vetorização permite que o nosso computador execute operações em conjuntos de dados inteiros de uma só vez. Isso acontece por meio de instruções de baixo nível na CPU chamadas SIMD (Single Instruction, Multiple Data).
+Então se utilizar loops não é a melhor abordagem para esse caso, temos uma alternativa perfeita para essa situação que é justamente a **Vetorização**. A vetorização permite que o nosso computador execute operações em conjuntos de dados inteiros de uma só vez. Isso acontece por meio de instruções de baixo nível na CPU chamado SIMD (Single Instruction, Multiple Data).
 
 Para usar isso em Python, utilizamos a biblioteca **NumPy**.
 
 ### A comparação: Loop vs Vetorização
-Se você ainda não acredita em mim, te provarei agora que o loop 'for' é mais lento que a vetorização! (e também aprenderá como utilizar a vetorização). Vamos, portanto, simular o cálculo do modelo $\mathbf{w} \cdot \mathbf{x}$ (Produto Escalar).
+Se você ainda não acredita em mim, te provarei agora que o loop ```for``` é mais lento que a vetorização! (e também aprenderá como utilizar a vetorização). Vamos, portanto, simular o cálculo do modelo $\mathbf{w} \cdot \mathbf{x}$ (Produto Escalar).
 
 #### A implementação com loop (lenta)
-Começaremos com a implementação do loop 'for'. Vamos percorrer cada elemento dos vetores 'w' e 'x' multiplicando-os e somar tudo.
+Começaremos com a implementação do loop ```for```. Vamos percorrer cada elemento dos vetores 'w' e 'x' multiplicando-os e somar tudo.
 
 ```python
 import time
@@ -79,19 +101,65 @@ end = time.time()
 print(f"Tempo com vetorização: {end - start:.5f} segundos.")
 ```
 
-##### **Saída do Terminal**
-```text
-Tempo com loop: 0.05918 segundos.
-Tempo com vetorização: 0.00186 segundos.
-```
+##### **📊 Resultado da Comparação**
+
+| Método | Tempo de Execução | Performance |
+| :--- | :--- | :--- |
+| Loop `for` (Python) | 0.05918s | 1x (Base) |
+| **Vetorização (NumPy)** | **0.00186s** | **~32x mais rápido** |
 
 Note que a implementação vetorizada é muito mais rápida (sim, por millisegundos. Mas ainda é ~32x mais rápido a vetorização em relação ao loop).
 
 ## Conexão com a Matemática 
-Lembra da fórmula matemática que vimos no Blog passado que envolvia o Produto Escalar ($f_{\mathbf{w},b}(\mathbf{x}) = \mathbf{w} \cdot \mathbf{x} + b $)? A vetorização permite traduzir essa matemática diretamente para o código. Invés de escrevermos 10 linhas de loop, podemos simplesmente escrever:
+Lembra da fórmula matemática que vimos no Blog passado que envolvia o Produto Escalar ($f_{\mathbf{w},b}(\mathbf{x}) = \mathbf{w} \cdot \mathbf{x} + b $)? A vetorização permite traduzir essa matemática diretamente para o código. Em vez de escrevermos 10 linhas de loop, podemos simplesmente escrever:
 
 ```python
 f = np.dot(w, x) + b
 ```
 
 Dessa forma o código ficará muito mais limpo, organizado e rápido.
+
+## Por trás dos bastidores
+É muito interessante como algoritmos com e sem vetorização, apesar de terem o mesmo propósito, apresentam velocidades de execução tão distintas. Para podermos entender melhor como isso é possível, precisamos entender como ambos os algoritmos funcionam computacionalmente.
+
+### Sem vetorização
+
+Como vimos anteriormente, na abordagem sem vetorização utilizamos o ```for``` loop para percorrer os dados. A questão é que o processador executa uma iteração por vez, sequencialmente.
+
+```python
+import time
+
+def dot_product_nao_vetorizado(w, x):
+  f = 0
+  # O loop impõe uma ordem sequencial rígida
+  for j in range(len(w)):
+      # O processador precisa buscar w[j] e x[j], 
+      # multiplicar, somar a 'f' e
+      # só então passar para o próximo j.
+      f = f + w[j] * x[j] 
+  return f
+```
+
+A linha do tempo seria basicamente:
+* No tempo $t_{0}$, o computador busca o valor $w_{0}$ e $x_{0}$, multiplica e soma ao acumulador $f$.
+* Somente após terminar essa conta, ele avança para o próximo tempo $t_{1}$, para processar o índice 1.
+* Isso se repete até o último elemento ($t_{n}$).
+
+Ou seja, para o vetor de 1.000.000 de elementos, o processador iria ter que realizar 1.000.000 ciclos dessa conta. Meio demorado, hein.
+
+### Com vetorização
+
+Ao usarmos ```np.dot(w, x)```, essa lógica muda completamente. diferente do loop ```for```, onde o Python processa um dado por vez, a vetorização aproveita o hardware moderno para processar blocos inteiros de dados de uma só vez.
+
+```python
+import numpy as np
+
+# Abordagem COM vetorização 
+# (SIMD: Single Instruction, Multiple Data)
+def dot_product_vetorizado(w, x):
+    # O Python delega tudo 
+    # para o backend em C/Assembly otimizado
+    return np.dot(w, x)
+```
+
+No código acima, todas as multiplicações acontecem paralelamente. Graças a Vetorização, o hardware ataca grandes blocos de dados simultaneamente, reduzindo drasticamente as janelas de tempo necessárias.
