@@ -4,3 +4,95 @@ pubDate: 2025-12-20
 description: 'Gradiente Descendente Múltiplo'
 heroImage: '/images/gradiente_multiplo.png'
 ---
+import Callout from '../../../components/Callout.astro'
+
+<Callout icon="⚠️" type="info" title="Vetor Gradiente">
+Embora o foco deste artigo seja o processo de otimização (Gradiente Descendente), o **Vetor Gradiente ($\nabla$)** é a ferramenta matemática que o torna possível. Ele condensa as derivadas parciais de todas as variáveis do sistema em uma única entidade geométrica. Então, entender como ele é calculado é o primeiro passo para compreender como o algoritmo "enxerga" o caminho mais rápido para o mínimo da função. Portanto, o objetivo do blog será explicar onde e como o Vetor Gradiente faz sua parte.
+</Callout>
+
+Se você estiver lendo em sequência, deve ter visto o blog sobre vetorização. Lá vimos o quanto é importante a implementação da vetorização para o treinamento do modelo. Antes de partirmos para a análise de como funciona o Gradiente Descendente Múltiplo, vamos rever como funciona a Regressão Linear Múltipla sem vetorização, e também com a vetorização, lado a lado. É um bom momento para você relembrar o processo.
+
+### Recapitulação
+
+#### Definição dos Parâmetros
+Inicialmente, para treinarmos nosso modelo, temos que analisar nossas variáveis independentes que irão servir de parâmetros para o modelo.
+
+Sem vetorização, temos:
+$$
+w_{1}, w_{2}, w_{3}, w_{4}, \cdots, w_{n} \text{ e } b
+$$
+
+Com vetorização, temos:
+$$
+[w_{1}, w_{2}, w_{3}, w_{4}, \cdots, w_{n}] \text{ e } b
+$$
+
+#### O Modelo (Função de Predição)
+
+Agora, temos que definir como o modelo fará uma estimativa. Na Regressão Linear, fazemos uma reta para encaixar o máximo de valores corretos possíveis. Temos como fazer isso também de duas maneiras:
+
+**Sem vetorização**, onde temos o formato **escalar**:
+
+$$
+f_{w,b}(x) = w_1x_1 + w_2x_2 + w_3x_3 + w_4x_4 + \cdots + b
+$$
+
+**Com vetorização**, onde temos o formato com **vetor**:
+$$
+f_{\vec{w},b}(x) = \vec{w} \cdot x  + b \text{ (bem mais curto!)}
+$$
+
+#### Função de Custo ($J$)
+
+Porém, só isso não basta. Precisamos saber o quanto nosso modelo está errando. Então... aí vem a função de custo!
+
+* **Sem vetorização:** 
+$$
+J(w_1, \dots, w_n, b) = \frac{1}{2m} \sum_{i=1}^{m} \left( (\overbrace{w_1x_1^{(i)} + \dots + w_{n}x_{n}^{(i)} + b}^{f_{w,b}(x^{(i)})}) - y^{(i)} \right)^2
+$$
+* **Com vetorização:** 
+$$
+J(\vec{w}, b) = \frac{1}{2m} \sum_{i=1}^{m} (\vec{w} \cdot \vec{x}^{(i)} + b - y^{(i)})^2
+$$
+
+#### O Gradiente Descendente (A Atualização)
+
+Aqui é onde a otimização realmente acontece. O objetivo é ajustar os parâmetros simultaneamente para "descer" na curva de erro da função de custo $J$ até encontrar o ponto de menor erro.
+
+**A Regra Geral (válida para ambos os casos):**
+
+$$
+parâmetro = parâmetro - \alpha \frac{\partial J}{\partial parâmetro}
+$$
+
+Onde $\alpha$ é a **Taxa de Aprendizado** (Learning Rate), que controla o tamanho do "passo" dado em direção ao mínimo.
+
+#### Comparação de Implementação:
+
+**1. Fluxo sem vetorização (Sequencial)**
+Neste cenário, o algoritmo precisa atualizar cada peso individualmente através de um loop iterativo. É um processo computacionalmente mais lento:
+
+* **Para cada $w_j$ (de $1$ até $n$):**
+    $$
+    w_j = w_j - \alpha \left[ \frac{1}{m}\sum_{i=1}^{m}{(f_{w,b}(x^{(i)})-y^{(i)})}x_j^{(i)} \right]
+    $$
+* **Para o viés $b$:**
+    $$
+    b = b - \alpha \left[ \frac{1}{m}\sum_{i=1}^{m}{(f_{w,b}(x^{(i)})-y^{(i)})} \right]
+    $$
+
+**2. Fluxo vetorizado (Simultâneo)**
+Na vetorização, tratamos o conjunto completo de parâmetros como uma única entidade matemática. É aqui que o **Vetor Gradiente** entra em cena:
+
+* **Atualização de $\vec{w}$:** $$\vec{w} = \vec{w} - \alpha \nabla_{\vec{w}} J(\vec{w}, b)$$
+* **Atualização de $b$:** $$b = b - \alpha \frac{\partial J}{\partial b}$$
+
+> **O que é o Vetor Gradiente ($\nabla J$) neste contexto?**
+>
+> Ele é um vetor que organiza todas as derivadas parciais calculadas no fluxo sequencial em uma única estrutura geométrica:
+>
+> $$\nabla_{\vec{w}} J = \begin{bmatrix} \frac{\partial J}{\partial w_1} \\ \frac{\partial J}{\partial w_2} \\ \vdots \\ \frac{\partial J}{\partial w_n} \end{bmatrix}$$
+>
+> Ao utilizarmos a vetorização, o hardware processa esse vetor inteiro de uma só vez. Portanto, o **Gradiente Descendente Múltiplo** é a aplicação deste vetor para mover todos os parâmetros do modelo simultaneamente para o ponto de menor erro.
+
+**Conclusão:** O Gradiente Descendente Múltiplo é o ponto onde o Cálculo Diferencial (derivadas parciais) se encontra com a Álgebra Linear (vetores e matrizes). Logo, dominar a forma vetorizada é o que te permite escalar modelos de regressão simples para modelos mais complexos como redes neurais.
